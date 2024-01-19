@@ -2,7 +2,7 @@ import cv2
 from PoseModule import poseDetector
 
 def main():
-    cap = cv2.VideoCapture('Videos/20.mp4')
+    cap = cv2.VideoCapture('test_9.mov')
     fourcc = cv2.VideoWriter_fourcc(*'mp4v')
     original_fps = cap.get(cv2.CAP_PROP_FPS)
 
@@ -22,9 +22,9 @@ def main():
             img = detector.findPose(resized_img)
 
             out.write(img)
-        # cv2.imshow("Image", resized_img)
+        cv2.imshow("Image", resized_img)
 
-        # cv2.waitKey(20)
+        cv2.waitKey(20)
 
     cap.release()
     out.release()

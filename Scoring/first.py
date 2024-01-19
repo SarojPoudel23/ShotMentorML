@@ -41,6 +41,8 @@ def main():
     df = pd.DataFrame(columns=columns)
     video_id =0
     video_files = glob.glob(os.path.join('videos', "*.mp4"))
+    video_files.sort(key=lambda x: int(os.path.splitext(os.path.basename(x))[0].split('_')[0]))
+
     for video in video_files:
         if 'right' in video:
             handed = "0"
