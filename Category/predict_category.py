@@ -5,10 +5,19 @@ import numpy as np
 from statistics import mode
 
 def predict_category(X_test):
-    logistic_regression = joblib.load('logistic_regression_model.joblib')
-    logistic_regression_scaled = joblib.load('logistic_regression_scaled_model.joblib')
-    svm = joblib.load('support_vector_machine_scaled_model.joblib')
-    scaler = joblib.load('scaler.joblib')
+
+    X_test = X_test.drop(['frame_number'], axis=1)
+    # logistic_regression = joblib.load('logistic_regression_model.joblib')
+    logistic_regression = joblib.load('Models/logreg.joblib')
+
+    # logistic_regression_scaled = joblib.load('logistic_regression_scaled_model.joblib')
+    logistic_regression_scaled = joblib.load('Models/logreg_scaled.joblib')
+
+    # svm = joblib.load('support_vector_machine_scaled_model.joblib')
+    svm = joblib.load('Models/svm_pred.joblib')
+
+    # scaler = joblib.load('scaler.joblib')
+    scaler = joblib.load('Models/new_scaler.joblib')
 
     # X_test = pd.read_csv('test/test_9_testing.csv')
     X_test_scaled = scaler.transform(X_test)

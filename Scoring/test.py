@@ -39,7 +39,7 @@ def main():
                "right_foot_index_x", "right_foot_index_y"]
     df = pd.DataFrame(columns=columns)
 
-    cap = cv2.VideoCapture('videos1/test_9.mov')
+    cap = cv2.VideoCapture('ayush_1.mov')
     frame =0
     while True:
         frame+=1
@@ -55,6 +55,6 @@ def main():
 
     cap.release()
     cv2.destroyAllWindows()
-    df.to_csv('test_9.csv', index=False)
+    df.to_csv('ayush_test.csv', index=False)
 if __name__ == "__main__":
     main()

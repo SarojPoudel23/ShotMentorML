@@ -9,7 +9,7 @@ mpDraw = mp.solutions.drawing_utils
 mpPose = mp.solutions.pose
 pose = mpPose.Pose()
 
-def findPose(img, video_id, df,frame, columns, handed):
+def findPose(img, video_id, df,frame, columns):
     imgRGB = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
     results = pose.process(imgRGB)
     if results.pose_landmarks:
@@ -19,14 +19,14 @@ def findPose(img, video_id, df,frame, columns, handed):
 
         landmark_points = [(int(lm.x * w), int(lm.y * h)) for lm in landmarks]
         flat_landmarks = [coord for point in landmark_points for coord in point]
-        frame_data = {"video_id": video_id, "frame_number": frame,"handed":handed, **dict(zip(columns[3:],flat_landmarks))}
+        frame_data = {"video_id": video_id, "frame_number": frame, **dict(zip(columns[2:],flat_landmarks))}
         df = pd.concat([df, pd.DataFrame(frame_data, index=[0])], ignore_index=True)
 
     return img,df
 
 
 def main():
-    columns = ["video_id", "frame_number","handed", "nose_x", "nose_y", "left_eye_inner_x", "left_eye_inner_y", "left_eye_x",
+    columns = ["video_id", "frame_number", "nose_x", "nose_y", "left_eye_inner_x", "left_eye_inner_y", "left_eye_x",
                "left_eye_y", "left_eye_outer_x", "left_eye_outer_y", "right_eye_inner_x", "right_eye_inner_y",
                "right_eye_x", "right_eye_y", "right_eye_outer_x", "right_eye_outer_y", "left_ear_x", "left_ear_y",
                "right_ear_x", "right_ear_y", "mouth_left_x", "mouth_left_y", "mouth_right_x", "mouth_right_y",
@@ -40,14 +40,10 @@ def main():
                "right_foot_index_x", "right_foot_index_y"]
     df = pd.DataFrame(columns=columns)
     video_id =0
-    video_files = glob.glob(os.path.join('videos', "*.mp4"))
+    video_files = glob.glob(os.path.join('recorded', "*.mov"))
     video_files.sort(key=lambda x: int(os.path.splitext(os.path.basename(x))[0].split('_')[0]))
 
     for video in video_files:
-        if 'right' in video:
-            handed = "0"
-        elif 'left' in video:
-            handed = '1'
 
         video_id+=1
         cap = cv2.VideoCapture(video)
@@ -62,10 +58,10 @@ def main():
             if not img.size == 0:
                 resized_img = cv2.resize(img, (406, 720))
 
-                img, df = findPose(resized_img,video_id,df,frame, columns, handed)
+                img, df = findPose(resized_img,video_id,df,frame, columns)
 
     cap.release()
     cv2.destroyAllWindows()
-    df.to_csv('data.csv', index=False)
+    df.to_csv('recorded.csv', index=False)
 if __name__ == "__main__":
     main()
